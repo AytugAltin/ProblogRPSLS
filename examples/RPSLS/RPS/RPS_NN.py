@@ -7,13 +7,13 @@ import torch.optim as optim
 from torch.autograd import Variable
 
 from examples.RPSLS.RPS.helpers import format_string
-from examples.RPSLS.RPS.normal_nets import Net
+from examples.RPSLS.RPS.normal_nets import *
 from logger import Logger
 import numpy as np
 from torchvision import datasets, transforms
 
 
-def test_MNIST(test_dataset):
+def test_RPS(test_dataset):
     confusion = np.zeros((3, 3), dtype=np.uint32)  # First index actual, second index predicted
     correct = 0
     n = 0
@@ -54,33 +54,39 @@ class RPS_DataSet(Dataset):
 
     def __getitem__(self, index):
         i1, i2, l = self.data[index]
-        return torch.cat((self.dataset[i1][0], self.dataset[i2][0]), 1), l
+        temp = torch.cat((self.dataset[i1][0], self.dataset[i2][0]), 1)
+        return temp, l
 
 
 print('Running RPS default neural network without logic: ')
 """Choose Net"""
-net = Net()
+
+#net = Net()
+# net = SimpleNet()
+net = Net2()
+
+
 optimizer = optim.Adam(net.parameters(), lr=0.001)
 criterion = nn.NLLLoss()
 
 
 transformations = transforms.Compose([
     transforms.ToTensor(),
-    transforms.Normalize((0.5), (0.5)),
+    #transforms.Normalize((0.5), (0.5)),
     transforms.Grayscale(num_output_channels=1)
 ])
 dataset = datasets.ImageFolder(root='../../../data/RPSLS/rock-paper-scissors/raw',transform = transformations)
 
 train_dataset = RPS_DataSet(dataset,'train_data.txt')
 test_dataset = RPS_DataSet(dataset,'test_data.txt')
-trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=2, shuffle=True, num_workers=1)
+trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=1, shuffle=True, num_workers=1)
 
 i = 1
 test_period = 500
 log_period = 50
 running_loss = 0.0
 log = Logger()
-net.eval()
+# net.eval()
 for epoch in range(200):
     print('Epoch: ', epoch)
     for data in trainloader:
@@ -93,11 +99,12 @@ for epoch in range(200):
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
+
         running_loss += loss.data.item()
         if i % log_period == 0:
             print('Iteration: ', i * 2, '\tAverage Loss: ', running_loss / log_period)
             log.log('loss', i * 2, running_loss / log_period)
             running_loss = 0
         if i % test_period == 0:
-            log.log('F1', i * 2, test_MNIST(test_dataset))
+            log.log('F1', i * 2, test_RPS(test_dataset))
         i += 1

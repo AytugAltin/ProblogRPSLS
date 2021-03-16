@@ -87,8 +87,8 @@ class MNIST_Addition(Dataset):
 
     def __getitem__(self, index):
         i1, i2, l = self.data[index]
-        return torch.cat((self.dataset[i1][0], self.dataset[i2][0]), 1), l
-
+        temp = torch.cat((self.dataset[i1][0], self.dataset[i2][0]), 1)
+        return temp, l
 
 train_dataset = MNIST_Addition(
     torchvision.datasets.MNIST(root='../../../data/MNIST', train=True, download=True, transform=transform),
