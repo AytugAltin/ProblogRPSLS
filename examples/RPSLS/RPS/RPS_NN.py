@@ -61,12 +61,12 @@ class RPS_DataSet(Dataset):
 print('Running RPS default neural network without logic: ')
 """Choose Net"""
 
-#net = Net()
+net = Net()
 # net = SimpleNet()
-net = Net2()
+#net = Net2()
 
 
-optimizer = optim.Adam(net.parameters(), lr=0.001)
+optimizer = optim.Adam(net.parameters(), lr=0.00001)
 criterion = nn.NLLLoss()
 
 
@@ -79,7 +79,7 @@ dataset = datasets.ImageFolder(root='../../../data/RPSLS/rock-paper-scissors/raw
 
 train_dataset = RPS_DataSet(dataset,'train_data.txt')
 test_dataset = RPS_DataSet(dataset,'test_data.txt')
-trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=1, shuffle=True, num_workers=1)
+trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=2, shuffle=True, num_workers=1)
 
 i = 1
 test_period = 500
@@ -102,7 +102,7 @@ for epoch in range(200):
 
         running_loss += loss.data.item()
         if i % log_period == 0:
-            print('Iteration: ', i * 2, '\tAverage Loss: ', running_loss / log_period)
+            print('Iteration: ', i * 2, '\tAverage Loss: ', running_loss / log_period )
             log.log('loss', i * 2, running_loss / log_period)
             running_loss = 0
         if i % test_period == 0:
