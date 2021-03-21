@@ -27,7 +27,7 @@ class Logger(object):
             for c in columns:
                 row.append(str(self.log_data[c].get(i, '')))
             lines.append(','.join(row))
-        datetime = strftime('_%y%m%d_%H%M')
-        filename = name+datetime+'.log'
-        with open(filename, 'w')as f:
+        #datetime = strftime('_%y%m%d_%H%M')
+        filename = name+'.log'
+        with open(filename, 'w+')as f:
             f.write('\n'.join(lines))

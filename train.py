@@ -52,11 +52,13 @@ def train_model(model,queries,nr_epochs,optimizer, loss_function = train, test_i
     signal.signal(signal.SIGINT, signal_handler)
     i = 1
     accumulated_loss = 0
+    losslog = Logger()
+    accuracylog = Logger()
     logger = Logger()
     start = time.time()
     print("Training for {} epochs ({} iterations).".format(nr_epochs,nr_epochs*len(queries)))
     if test is not None:
-        logger.log_list(i,test(model))
+        accuracylog.log_list(i,test(model))
     for epoch in range(nr_epochs):
         epoch_start = time.time()
         if interrupt:
@@ -79,14 +81,66 @@ def train_model(model,queries,nr_epochs,optimizer, loss_function = train, test_i
                 model.save_state(fname)
             if i % log_iter == 0:
                 print('Iteration: ',i,'\tAverage Loss: ',accumulated_loss/log_iter)
-                logger.log('time',i,iter_time - start)
-                logger.log('loss',i,accumulated_loss/log_iter)
+                losslog.log('time',i,iter_time - start)
+                losslog.log('loss',i,accumulated_loss/log_iter)
                 for k in model.parameters:
                     logger.log(str(k),i,model.parameters[k])
                 accumulated_loss = 0
             if test is not None and i % test_iter == 0:
-                logger.log_list(i,test(model))
+                accuracylog.log_list(i,test(model))
             i += 1
         optimizer.step_epoch()
         print('Epoch time: ',time.time()-epoch_start)
+        losslog.write_to_file("RPS_Problog_loss")
+        accuracylog.write_to_file("RPS_Problog_accuracy")
     return logger
+
+
+def train_model_new(model,queries,nr_epochs,optimizer, loss_function = train, test_iter=1000,test=None,log_iter=100,shuffle=True):
+    signal.signal(signal.SIGINT, signal_handler)
+    i = 1
+    accumulated_loss = 0
+    losslog = Logger()
+    accuracylog = Logger()
+    start = time.time()
+    test_time = 0
+    print("Training for {} epochs ({} iterations).".format(nr_epochs,nr_epochs*len(queries)))
+    for epoch in range(nr_epochs):
+        epoch_start = time.time()
+        if interrupt:
+            break
+        print("Epoch",epoch+1)
+        q_indices = list(range(len(queries)))
+        if shuffle:
+            random.shuffle(q_indices)
+        for q in q_indices:
+            q = queries[q]
+
+            loss = loss_function(model, optimizer, q)
+            accumulated_loss += loss
+            optimizer.step()
+
+            iter_time = time.time()
+
+            if i % log_iter == 0:
+                print('Iteration: ',i,
+                      '\tAverage Loss:  ',accumulated_loss/log_iter,
+                      '\ttime: ', iter_time - start - test_time,
+                      '\tTest-time: ', test_time)
+
+                losslog.log('time',i,iter_time - start)
+                losslog.log('loss',i,accumulated_loss/log_iter)
+                accumulated_loss = 0
+
+            if test is not None and i % test_iter == 0:
+                test_start = time.time()
+                accuracylog.log_list(i,test(model))
+                test_time = test_time + ( time.time() - test_start)
+
+
+            i += 1
+        optimizer.step_epoch()
+        print('Epoch time: ',time.time()-epoch_start)
+        losslog.write_to_file("RPS_Problog_loss")
+        accuracylog.write_to_file("RPS_Problog_accuracy")
+

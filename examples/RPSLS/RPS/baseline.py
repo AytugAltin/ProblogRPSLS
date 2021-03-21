@@ -1,3 +1,6 @@
+
+import time
+
 import torch
 import torchvision
 from torch.utils.data import Dataset
@@ -6,12 +9,12 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.autograd import Variable
 
-from examples.RPSLS.RPS.helpers import format_string
+from examples.RPSLS.RPS.helpers import format_string, write
 from examples.RPSLS.RPS.normal_nets import *
 from logger import Logger
 import numpy as np
 from torchvision import datasets, transforms
-
+from params import *
 
 def test_RPS(test_dataset):
     confusion = np.zeros((3, 3), dtype=np.uint32)  # First index actual, second index predicted
@@ -37,7 +40,7 @@ def test_RPS(test_dataset):
         F1 += 2 * TP / (2 * TP + FP + FN) * (FN + TP) / N
     print('F1: ', F1)
     print('Accuracy: ', acc)
-    return F1
+    return F1,acc
 
 class RPS_DataSet(Dataset):
     def __init__(self, dataset, examples):
@@ -58,7 +61,7 @@ class RPS_DataSet(Dataset):
         return temp, l
 
 
-print('Running RPS default neural network without logic: ')
+print('Running RPS Baseline neural network without logic: ')
 """Choose Net"""
 
 net = Net()
@@ -66,8 +69,8 @@ net = Net()
 #net = Net2()
 
 
-optimizer = optim.Adam(net.parameters(), lr=0.00001)
-criterion = nn.NLLLoss()
+optimizer = optim.Adam(net.parameters(), lr=0.0001)
+criterion = nn.CrossEntropyLoss()
 
 
 transformations = transforms.Compose([
@@ -79,17 +82,22 @@ dataset = datasets.ImageFolder(root='../../../data/RPSLS/rock-paper-scissors/raw
 
 train_dataset = RPS_DataSet(dataset,'train_data.txt')
 test_dataset = RPS_DataSet(dataset,'test_data.txt')
-trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=2, shuffle=True, num_workers=1)
+trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=1, shuffle=True, num_workers=1)
 
 i = 1
-test_period = 500
-log_period = 50
+test_period = TEST_ITER
+log_period = LOG_ITER
 running_loss = 0.0
-log = Logger()
+losslog = Logger()
+accuracylog = Logger()
 # net.eval()
-for epoch in range(200):
+
+start = time.time()
+test_time = 0
+for epoch in range(EPOCHS):
     print('Epoch: ', epoch)
     for data in trainloader:
+        iter_time = time.time()
         inputs, labels = data
         inputs, labels = Variable(inputs), Variable(labels)
 
@@ -101,10 +109,31 @@ for epoch in range(200):
         optimizer.step()
 
         running_loss += loss.data.item()
+
+        # if i % log_period == 0:
+        #     print('Iteration: ', i * 2, '\tAverage Loss: ', running_loss / log_period )
+        #     log.log('loss', i * 2, running_loss / log_period)
+        #     running_loss = 0
+        # if i % test_period == 0:
+        #     log.log('F1', i * 2, test_RPS(test_dataset))
+        # i += 1
+
         if i % log_period == 0:
-            print('Iteration: ', i * 2, '\tAverage Loss: ', running_loss / log_period )
-            log.log('loss', i * 2, running_loss / log_period)
+            print('Iteration: ', i ,
+                  '\tAverage Loss: ', running_loss / log_period ,
+                      '\ttime: ', iter_time - start - test_time,
+                      '\tTest-time: ', test_time)
+            losslog.log('loss', i , running_loss / log_period)
+
             running_loss = 0
         if i % test_period == 0:
-            log.log('F1', i * 2, test_RPS(test_dataset))
+            test_start = time.time()
+            f1,acc = test_RPS(test_dataset)
+            #log.log('F1', i , f1)
+            accuracylog.log('Accuracy', i , acc)
+            test_time = test_time + (time.time() - test_start)
         i += 1
+
+    losslog.write_to_file("RPS_BaseLine_loss")
+    accuracylog.write_to_file("RPS_BaseLine_accuracy")
+

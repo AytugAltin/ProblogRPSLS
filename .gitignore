@@ -239,3 +239,4 @@ examples/data/MNIST/MNIST/raw/t10k-images-idx3-ubyte
 data/MNIST/MNIST/raw/train-labels-idx1-ubyte
 data/MNIST/MNIST/raw/train-images-idx3-ubyte
 *.zip
+*.jpg

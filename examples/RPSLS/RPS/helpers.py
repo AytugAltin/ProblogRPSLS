@@ -6,6 +6,7 @@ from train import interrupt, train
 from logger import Logger
 import time
 import random
+import csv
 
 path = os.path.abspath(__file__)
 dir_path = os.path.dirname(path)
@@ -72,8 +73,6 @@ def format_string(string):
     string = string.replace(',', ' ')
     return string
 
-
-def train_normal_network(model,queries,nr_epochs,optimizer, loss_function = train, test_iter=1000,
-                         test=None,log_iter=100,snapshot_iter=None,snapshot_name='model',shuffle=True):
+def write(file,first_coll,second_coll):
     return 0
 
