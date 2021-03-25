@@ -1,64 +1,7 @@
 \section{Experimental Evaluation}
 In this section the models are introduced and their results are being evaluated.
-\subsection{rock paper scissors (RPS)}
-The first model is a simple rock paper scissors solver that given two images decides the winner. The possible options are: tie, player 1 wins, player 2 wins. The example images can be found on figure \ref{fig:rps_input}.
-
-\begin{figure}[htp]
-    \centering
-    \includegraphics[width=.3\textwidth]{figures/input/paper.jpg}\hfill
-    \includegraphics[width=.3\textwidth]{figures/input/rock.jpg}\hfill
-    \includegraphics[width=.3\textwidth]{figures/input/scissors.jpg}
-    \caption{Example of input pictures with hand gestures: paper, rock and scissors}
-    \label{fig:rps_input}
-\end{figure}
-
-\paragraph{Implementation details:} For the DeepProbLog implementation, a similar approach as \cite{DBLP} has been taken:
-\begin{itemize}
-    \item Cross-entropy loss between predicted and desired outcomes
-    \item The network architecture: 2 convolutional layers with kernel size 5, and respectively 6 and 16 filters, both followed with a maxpool-layer of size 2 and stride 2 which are also both followed by the activation layer ReLU. These are followed by 3 linear layers 120, 84 and 3, The first 2 layers are followed by the activation layer ReLU and the last by a softmax layer. \item The learning rate has been set to 0.0001. 
-    \item Adam \cite{kingma2014adam} optimization for the neural networks, and SGD for the logic parameters is used.
-  \end{itemize}
-  On listing \ref{lst:rps-logic} the model can be found that is used
-
-  \begin{lstlisting}[label={lst:rps-logic},language=Prolog,frame=single,caption={Rock paper scissors DeepProbLog model},captionpos=b]
-    nn(rps_net,[X],Y,[paper,scissors,rock]) :: sign(X,Y).
-
-    rps(X,Y,0) :- sign(X,paper), sign(Y,paper).
-    rps(X,Y,0) :- sign(X,rock), sign(Y,rock).
-    rps(X,Y,0) :- sign(X,scissors), sign(Y,scissors).
-    rps(X,Y,1) :- sign(X,paper), sign(Y,rock).
-    rps(X,Y,2) :- sign(X,paper), sign(Y,scissors).
-    rps(X,Y,2) :- sign(X,rock), sign(Y,paper).
-    rps(X,Y,1) :- sign(X,rock), sign(Y,scissors).
-    rps(X,Y,1) :- sign(X,scissors), sign(Y,paper).
-    rps(X,Y,2) :- sign(X,scissors), sign(Y,rock).
-    \end{lstlisting}
-
-    The implementation and architecture for the CNN that we use to compare the DeepProbLog network is similar to the DeepProbLog. Here, the last layer outcomes does represent the winner (3 options) instead of a gesture (also 3 options).
 
 
-\begin{figure}[h]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \begin{tikzpicture}[yscale=0.9,xscale=0.9]
-            \begin{axis}[xlabel=Iterations,ylabel=Loss]
-                \addplot[thin,red] table [x=i, y=loss, col sep=comma] {results/RPS/RPS_BaseLine_loss.log};
-                \addplot[thin,blue]  table [x=i, y=loss, col sep=comma] {results/RPS/RPS_Problog_loss.log};
-                
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Loss of the both networks over number of iterations}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \begin{tikzpicture}[yscale=0.9,xscale=0.9]
-            \begin{axis}[xlabel=Iterations,ylabel=Accuracy]
-                \addplot[thin,red] table [x=i, y=Accuracy, col sep=comma] {results/RPS/RPS_BaseLine_accuracy.log};
-                \addplot[thin,blue]  table [x=i, y=Accuracy, col sep=comma] {results/RPS/RPS_Problog_accuracy.log};
-                
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Accuracy of the both networks over number of iterations}
-    \end{subfigure}
-    \caption{Accuracy of the both networks over number of iterations: red for CNN , blue for DeepProbLog}
-\end{figure}  
+\input{section/results/RPS.tex}
+
+\input{section/results/RPS-LS.tex}

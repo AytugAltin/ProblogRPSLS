@@ -1,0 +1,99 @@
+\subsection{rock paper scissors lizard spock(RPS-LS)}
+This model is a bit more advanced. The possible options are still the same, however, there are 2 more possible inputs: spock and lizard, these are visible figure \ref{fig:rpsls_input}. 
+
+\begin{figure}[htp]
+    \centering
+    \includegraphics[width=.3\textwidth]{figures/input/lizard.jpg}
+    \includegraphics[width=.3\textwidth]{figures/input/spock.jpg}
+    \caption{Example of input pictures with hand gestures: lizard and spock\cite{RPSLS-database}.} %%TODO import ref of pictures source
+    \label{fig:rpsls_input}
+\end{figure}
+
+On listing \ref{lst:rpsls-logic} the model can be found that is used, it is similar to the RPS model.
+
+\begin{lstlisting}[label={lst:rpsls-logic},language=Prolog,frame=single,caption={Rock paper scissors lizard spock DeepProbLog model},captionpos=b]
+nn(rpsls_net,[X],Y,[paper,scissors,rock,lizard,spock]) :: sign(X,Y).
+
+rpsls(X,Y,0) :- sign(X,Z), sign(Y,Z).
+
+rpsls(X,Y,1) :- sign(X,paper), sign(Y,rock).
+rpsls(X,Y,2) :- sign(X,paper), sign(Y,scissors).
+rpsls(X,Y,2) :- sign(X,paper), sign(Y,lizard).
+rpsls(X,Y,1) :- sign(X,paper), sign(Y,spock).
+
+rpsls(X,Y,1) :- sign(X,scissors), sign(Y,paper).
+rpsls(X,Y,2) :- sign(X,scissors), sign(Y,rock).
+rpsls(X,Y,1) :- sign(X,scissors), sign(Y,lizard).
+rpsls(X,Y,2) :- sign(X,scissors), sign(Y,spock).
+
+rpsls(X,Y,1) :- sign(X,rock), sign(Y,scissors).
+rpsls(X,Y,2) :- sign(X,rock), sign(Y,paper).
+rpsls(X,Y,1) :- sign(X,rock), sign(Y,lizard).
+rpsls(X,Y,2) :- sign(X,rock), sign(Y,spock).
+
+rpsls(X,Y,2) :- sign(X,lizard), sign(Y,scissors).
+rpsls(X,Y,1) :- sign(X,lizard), sign(Y,paper).
+rpsls(X,Y,2) :- sign(X,lizard), sign(Y,rock).
+rpsls(X,Y,1) :- sign(X,lizard), sign(Y,spock).
+
+rpsls(X,Y,1) :- sign(X,spock), sign(Y,scissors).
+rpsls(X,Y,2) :- sign(X,spock), sign(Y,paper).
+rpsls(X,Y,1) :- sign(X,spock), sign(Y,rock).
+rpsls(X,Y,2) :- sign(X,spock), sign(Y,lizard).
+    \end{lstlisting}
+
+
+\paragraph{Implementation details:} For the DeepProbLog implementation, a similar approach has been taken as the RPS model. The model now has 5 outputs instead of 3 because of the addition of 2 new hand gestures: lizard and spock. The first baseline CNN does still has the same number of outputs: tie, player1 wins and player2 wins. The second baseline CNN has the addition of is the same except it has a batch size of 5 and a weight decay of 0.00001 which is L2 regularisation to prevent overfitting the training data. 
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \begin{tikzpicture}[yscale=0.9,xscale=0.9]
+            \begin{axis}[xlabel=Iterations,ylabel=Loss]
+                \addplot[thin,red] table [x=i, y=loss, col sep=comma] {results/RPSLS/RPS_BaseLine_loss.log};
+                \addplot[thin,blue]  table [x=i, y=loss, col sep=comma] {results/RPSLS/RPSLS_Problog_loss.log};
+                
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Loss of networks over number of iterations}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \begin{tikzpicture}[yscale=0.9,xscale=0.9]
+            \begin{axis}[xlabel=Iterations,ylabel=Accuracy]
+                \addplot[thin,red] table [x=i, y=Accuracy, col sep=comma] {results/RPSLS/RPS_BaseLine_accuracy.log};
+                \addplot[thin,blue]  table [x=i, y=Accuracy, col sep=comma] {results/RPSLS/RPSLS_Problog_accuracy.log};
+                
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Accuracy of networks over number of iterations}
+    \end{subfigure}
+    \caption{Accuracy of the both networks over number of iterations: red for CNN , blue for DeepProbLog}
+\end{figure}  
+
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[b]{0.49\textwidth}
+        \begin{tikzpicture}[yscale=0.9,xscale=0.9]
+            \begin{axis}[xlabel=Iterations,ylabel=Loss]
+                
+                \addplot[thin,green]  table [x expr=\thisrowno{0}*5, y=loss, col sep=comma] {results/RPSLS/RPS_BaseLine_loss_big.log};
+                
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Loss of networks over number of iterations}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.49\textwidth}
+        \begin{tikzpicture}[yscale=0.9,xscale=0.9]
+            \begin{axis}[xlabel=Iterations,ylabel=Accuracy]
+                
+                \addplot[thin,green]  table [x expr=\thisrowno{0}*5, y=Accuracy, col sep=comma] {results/RPSLS/RPS_BaseLine_accuracy_big.log};
+                
+            \end{axis}
+        \end{tikzpicture}
+        \caption{Accuracy of networks over number of iterations}
+    \end{subfigure}
+    \caption{Accuracy of the both networks over number of iterations: red for CNN , blue for DeepProbLog}
+\end{figure}  

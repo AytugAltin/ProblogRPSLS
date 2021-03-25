@@ -30,6 +30,10 @@ class Optimizer(object):
                 network.step()
             self.clear()
 
+    def get_model(self):
+        return self.model
+
+
 
 class SGD(Optimizer):
 

@@ -1,6 +1,8 @@
 import torch
 import math
 import signal
+
+from examples.RPSLS.RPSLS.params import WRITE_PERIOD
 from logger import Logger
 import time
 from logic import term2list2
@@ -128,7 +130,7 @@ def train_model_new(model,queries,nr_epochs,optimizer, loss_function = train, te
                       '\ttime: ', iter_time - start - test_time,
                       '\tTest-time: ', test_time)
 
-                losslog.log('time',i,iter_time - start)
+                losslog.log('time',i,iter_time - start-test_time)
                 losslog.log('loss',i,accumulated_loss/log_iter)
                 accumulated_loss = 0
 
@@ -137,10 +139,14 @@ def train_model_new(model,queries,nr_epochs,optimizer, loss_function = train, te
                 accuracylog.log_list(i,test(model))
                 test_time = test_time + ( time.time() - test_start)
 
+            if i % WRITE_PERIOD == 0:
+                test_start = time.time()
+                losslog.write_to_file("RPS_BaseLine_loss")
+                accuracylog.write_to_file("RPS_BaseLine_accuracy")
+                test_time = test_time + (time.time() - test_start)
+
 
             i += 1
         optimizer.step_epoch()
         print('Epoch time: ',time.time()-epoch_start)
-        losslog.write_to_file("RPS_Problog_loss")
-        accuracylog.write_to_file("RPS_Problog_accuracy")
 
