@@ -82,6 +82,7 @@ dataset = datasets.ImageFolder(root='../../../data/RPSLS/rock-paper-scissors/raw
 
 train_dataset = RPS_DataSet(dataset,'train_data.txt')
 test_dataset = RPS_DataSet(dataset,'test_data.txt')
+batchsize = 1
 trainloader = torch.utils.data.DataLoader(train_dataset, batch_size=1, shuffle=True, num_workers=1)
 
 i = 1
@@ -110,30 +111,30 @@ for epoch in range(EPOCHS):
 
         running_loss += loss.data.item()
 
-        # if i % log_period == 0:
-        #     print('Iteration: ', i * 2, '\tAverage Loss: ', running_loss / log_period )
-        #     log.log('loss', i * 2, running_loss / log_period)
-        #     running_loss = 0
-        # if i % test_period == 0:
-        #     log.log('F1', i * 2, test_RPS(test_dataset))
-        # i += 1
+        running_loss += loss.data.item()
 
-        if i % log_period == 0:
-            print('Iteration: ', i ,
-                  '\tAverage Loss: ', running_loss / log_period ,
-                      '\ttime: ', iter_time - start - test_time,
-                      '\tTest-time: ', test_time)
-            losslog.log('loss', i , running_loss / log_period)
-
+        iteration = i * batchsize
+        if iteration % log_period == 0:
+            print('Iteration: ', iteration, '\tAverage Loss: ', running_loss / log_period,
+                  '\ttime: ', iter_time - start - test_time, '\tTest-time: ', test_time)
+            losslog.log('loss', iteration, running_loss / log_period)
+            losslog.log('time', iteration, iter_time - start - test_time)
             running_loss = 0
-        if i % test_period == 0:
-            test_start = time.time()
-            f1,acc = test_RPS(test_dataset)
-            #log.log('F1', i , f1)
-            accuracylog.log('Accuracy', i , acc)
-            test_time = test_time + (time.time() - test_start)
-        i += 1
 
-    losslog.write_to_file("RPS_BaseLine_loss")
-    accuracylog.write_to_file("RPS_BaseLine_accuracy")
+        if iteration % test_period == 0:
+            test_start = time.time()
+            net.eval()
+            f1, acc = test_RPS(test_dataset)
+            accuracylog.log('Accuracy', iteration, acc)
+            test_time = test_time + (time.time() - test_start)
+            net.train()
+
+
+        if iteration % WRITE_PERIOD == 0:
+            test_start = time.time()
+            losslog.write_to_file("RPS_BaseLine_loss")
+            accuracylog.write_to_file("RPS_BaseLine_accuracy")
+            test_time = test_time + (time.time() - test_start)
+
+        i += 1
 

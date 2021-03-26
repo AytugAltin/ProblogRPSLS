@@ -1,4 +1,5 @@
 \subsection{rock paper scissors lizard spock(RPS-LS)}
+
 This model is a bit more advanced. The possible options are still the same, however, there are 2 more possible inputs: spock and lizard, these are visible figure \ref{fig:rpsls_input}. 
 
 \begin{figure}[htp]
@@ -43,57 +44,37 @@ rpsls(X,Y,2) :- sign(X,spock), sign(Y,lizard).
     \end{lstlisting}
 
 
-\paragraph{Implementation details:} For the DeepProbLog implementation, a similar approach has been taken as the RPS model. The model now has 5 outputs instead of 3 because of the addition of 2 new hand gestures: lizard and spock. The first baseline CNN does still has the same number of outputs: tie, player1 wins and player2 wins. The second baseline CNN has the addition of is the same except it has a batch size of 5 and a weight decay of 0.00001 which is L2 regularisation to prevent overfitting the training data. 
+\paragraph{Implementation details:} For the DeepProbLog implementation, a similar approach has been taken as the RPS model. The model now has 5 outputs instead of 3 because of the addition of 2 new hand gestures: lizard and spock. The first baseline CNN does still has the same number of outputs: tie, player1 wins and player2 wins. 
 
-\begin{figure}[h]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \begin{tikzpicture}[yscale=0.9,xscale=0.9]
-            \begin{axis}[xlabel=Iterations,ylabel=Loss]
-                \addplot[thin,red] table [x=i, y=loss, col sep=comma] {results/RPSLS/RPS_BaseLine_loss.log};
-                \addplot[thin,blue]  table [x=i, y=loss, col sep=comma] {results/RPSLS/RPSLS_Problog_loss.log};
-                
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Loss of networks over number of iterations}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \begin{tikzpicture}[yscale=0.9,xscale=0.9]
-            \begin{axis}[xlabel=Iterations,ylabel=Accuracy]
-                \addplot[thin,red] table [x=i, y=Accuracy, col sep=comma] {results/RPSLS/RPS_BaseLine_accuracy.log};
-                \addplot[thin,blue]  table [x=i, y=Accuracy, col sep=comma] {results/RPSLS/RPSLS_Problog_accuracy.log};
-                
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Accuracy of networks over number of iterations}
-    \end{subfigure}
-    \caption{Accuracy of the both networks over number of iterations: red for CNN , blue for DeepProbLog}
-\end{figure}  
+\subsubsection{Results}
+The loss and accuracy over the iterations of both models are plotted on figure \ref{fig:rpsls_output_loss} and figure \ref{fig:rpsls_output_acc} respectively. Notice that the scales are different from those we have seen on figre \ref{fig:rps_output}. We can clearly see by keeping the same models and increasing the complexity, the CNN model struggles more. It takes the CNN model 38000 iterations to reach an accuracy of 100\% while the DeepProbLog model takes only 3700 iterations to reach the same level of accuracy. The CNN takes up to 661 seconds until it reaches this accuracy. After excessive tuning and trying different hyperparameters for this CNN model, the model was able to achieve a 100\% accuracy a little faster. Doubling the learning rate from $0.0001$ to $0.0002$, the new CNN model was able to achieve 
 
 
-\begin{figure}[h]
-    \centering
-    \begin{subfigure}[b]{0.49\textwidth}
-        \begin{tikzpicture}[yscale=0.9,xscale=0.9]
-            \begin{axis}[xlabel=Iterations,ylabel=Loss]
-                
-                \addplot[thin,green]  table [x expr=\thisrowno{0}*5, y=loss, col sep=comma] {results/RPSLS/RPS_BaseLine_loss_big.log};
-                
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Loss of networks over number of iterations}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.49\textwidth}
-        \begin{tikzpicture}[yscale=0.9,xscale=0.9]
-            \begin{axis}[xlabel=Iterations,ylabel=Accuracy]
-                
-                \addplot[thin,green]  table [x expr=\thisrowno{0}*5, y=Accuracy, col sep=comma] {results/RPSLS/RPS_BaseLine_accuracy_big.log};
-                
-            \end{axis}
-        \end{tikzpicture}
-        \caption{Accuracy of networks over number of iterations}
-    \end{subfigure}
-    \caption{Accuracy of the both networks over number of iterations: red for CNN , blue for DeepProbLog}
-\end{figure}  
+\begin{figure}
+    \begin{tikzpicture}[yscale=0.9,xscale=0.9]
+        \begin{axis}[xlabel=Iterations,ylabel=Loss,xscale=2]
+            \addplot[thin,red] table [x=i, y=loss, col sep=comma] {results/RPSLS/RPSLS_BaseLine_loss.log};
+            \addplot[thin,blue]  table [x=i, y=loss, col sep=comma] {results/RPSLS/RPSLS_Problog_loss.log};
+            \addplot[ultra thin,green]  table [x=i, y=loss, col sep=comma] {results/RPSLS/RPSLS_BaseLine_losslr0.0002lrm1.log};
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Loss of RPS-LS networks over number of iterations}
+    \label{fig:rpsls_output_loss}
+\end{figure}
+\begin{figure}
+    \begin{tikzpicture}[yscale=0.9,xscale=0.9]
+        \begin{axis}[xlabel=Iterations,ylabel=Accuracy,xscale=2]
+            \addplot[thin,red] table [x=i, y=Accuracy, col sep=comma] {results/RPSLS/RPSLS_BaseLine_accuracy.log};
+            \addplot[thin,blue]  table [x=i, y=Accuracy, col sep=comma] {results/RPSLS/RPSLS_Problog_accuracy.log};
+            \addplot[ultra thin,green]  table [x=i, y=Accuracy, col sep=comma] {results/RPSLS/RPSLS_BaseLine_accuracylr0.0002lrm1.log};
+        \end{axis}
+    \end{tikzpicture}
+    \caption{Accuracy of RPS-LS networks over number of iterations}
+    \label{fig:rpsls_output_acc}
+\end{figure}
+
+
+
+
+
+

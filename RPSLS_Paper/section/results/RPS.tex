@@ -34,10 +34,14 @@ The first model is a simple rock paper scissors solver that given two images dec
     The implementation and architecture for the CNN that we use to compare the DeepProbLog network is similar to the DeepProbLog. Here, the last layer outcomes does represent the winner (3 options) instead of a gesture (also 3 options).
 
 
+\subsubsection{Results}
+The loss and accuracy over the iterations of both models are plotted on figure \ref{fig:rps_output}. We can clearly see that the DeepProbLog has an advantage over the CNN. The CNN reaches 100\% accuracy over 1350 iterations in 24.2 seconds while the DeepProbLog example reaches it in 350 iterations and 18.7 seconds. 
+
+
 \begin{figure}[h]
     \centering
     \begin{subfigure}[b]{0.49\textwidth}
-        \begin{tikzpicture}[yscale=0.9,xscale=0.9]
+        \begin{tikzpicture}
             \begin{axis}[xlabel=Iterations,ylabel=Loss]
                 \addplot[thin,red] table [x=i, y=loss, col sep=comma] {results/RPS/RPS_BaseLine_loss.log};
                 \addplot[thin,blue]  table [x=i, y=loss, col sep=comma] {results/RPS/RPS_Problog_loss.log};
@@ -48,7 +52,7 @@ The first model is a simple rock paper scissors solver that given two images dec
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
-        \begin{tikzpicture}[yscale=0.9,xscale=0.9]
+        \begin{tikzpicture}
             \begin{axis}[xlabel=Iterations,ylabel=Accuracy]
                 \addplot[thin,red] table [x=i, y=Accuracy, col sep=comma] {results/RPS/RPS_BaseLine_accuracy.log};
                 \addplot[thin,blue]  table [x=i, y=Accuracy, col sep=comma] {results/RPS/RPS_Problog_accuracy.log};
@@ -57,5 +61,6 @@ The first model is a simple rock paper scissors solver that given two images dec
         \end{tikzpicture}
         \caption{Accuracy of the both networks over number of iterations}
     \end{subfigure}
-    \caption{Accuracy of the both networks over number of iterations: red for CNN , blue for DeepProbLog}
+    \caption{Performance (loss and accuracy) of the both networks over number of iterations: red for CNN,blue for DeepProbLog}
+    \label{fig:rps_output}
 \end{figure}  

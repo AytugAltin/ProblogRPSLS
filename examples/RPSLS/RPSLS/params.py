@@ -5,3 +5,5 @@ WRITE_PERIOD = 100
 
 #2400 train examples
 #600 train examples
+
+

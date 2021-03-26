@@ -5,3 +5,38 @@ In this section the models are introduced and their results are being evaluated.
 \input{section/results/RPS.tex}
 
 \input{section/results/RPS-LS.tex}
+
+\subsection{Final results}
+
+
+\begin{table}[!h]
+    \centering
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        Model & iterations until 100\% accuracy  & time ( until 100\% accuracy   & loss \\
+        \hline\hline
+        RPS CNN & 1350 & 24.2 s& 100 \\
+        \hline
+        RPS DeepProbLog & 350 & 18.7 s &100\\
+        \hline
+        \hline
+        RPS-LS CNN & 38000 & 661.2 s&100\\
+        \hline
+        RPS-LS DeepProbLog & 3700 & 246.2 s&100\\
+        \hline
+        RPS-LS CNN (tuned lr=0.0002)& 23400 & 399.2 s&83.33\\
+        \hline
+        5 & 41.67 & 102.00 &104.17\\
+        \hline
+        6 & 50.00 & 122.30 &125.00\\
+        \hline
+        7 & 58.33 & 142.00 &145.83\\
+        \hline
+        8 & 66.67 & 161.70 &166.67\\
+        \hline
+        9 & 75.00 & 181.50 &187.50\\
+        \hline
+    \end{tabular}
+    \caption{Measurement result of Exp.1}
+    \label{t1}
+    \end{table}

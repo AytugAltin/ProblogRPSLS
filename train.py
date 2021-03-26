@@ -141,8 +141,8 @@ def train_model_new(model,queries,nr_epochs,optimizer, loss_function = train, te
 
             if i % WRITE_PERIOD == 0:
                 test_start = time.time()
-                losslog.write_to_file("RPS_BaseLine_loss")
-                accuracylog.write_to_file("RPS_BaseLine_accuracy")
+                losslog.write_to_file("RPS_Problog_loss")
+                accuracylog.write_to_file("RPS_ProBlog_accuracy")
                 test_time = test_time + (time.time() - test_start)
 
 

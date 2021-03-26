@@ -20,7 +20,8 @@ with open('model.pl') as f:
 
 network = RPSLS_Net(N=5)
 
-learning_rate = 0.001
+learning_rate = 0.0001
+
 print(learning_rate)
 
 net = Network(network, 'rpsls_net', neural_predicate)

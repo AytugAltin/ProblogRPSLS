@@ -28,7 +28,7 @@ model = Model(problog_string, [net], caching=False)
 optimizer = Optimizer(model, 2)
 
 train_model_new(model, queries, nr_epochs=EPOCHS, optimizer=optimizer,test_iter=TEST_ITER,
-            test = lambda x: Model.accuracy(x, test_queries),log_iter=LOG_ITER,learning_rate=learning_rate)
+            test = lambda x: Model.accuracy(x, test_queries),log_iter=LOG_ITER)
 
 
 
