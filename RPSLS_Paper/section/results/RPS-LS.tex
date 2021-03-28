@@ -1,6 +1,6 @@
 \subsection{rock paper scissors lizard spock(RPS-LS)}
 
-This model is a bit more advanced. The possible options are still the same, however, there are 2 more possible inputs: spock and lizard, these are visible figure \ref{fig:rpsls_input}. 
+This model is a bit more advanced. The possible winners are still the same, but there are 2 more possible inputs: spock and lizard, examples of both of these images are visible figure \ref{fig:rpsls_input}. There are 2400 training examples and 600 examples are used to calculate the accuracy. 
 
 \begin{figure}[htp]
     \centering
@@ -44,13 +44,14 @@ rpsls(X,Y,2) :- sign(X,spock), sign(Y,lizard).
     \end{lstlisting}
 
 
-\paragraph{Implementation details:} For the DeepProbLog implementation, a similar approach has been taken as the RPS model. The model now has 5 outputs instead of 3 because of the addition of 2 new hand gestures: lizard and spock. The first baseline CNN does still has the same number of outputs: tie, player1 wins and player2 wins. 
+\paragraph{Implementation details:} For the DeepProbLog implementation, a similar approach has been taken as the RPS model. The learning rate has been increased to 0.001. The model now has 5 outputs instead of 3 because of the addition of 2 new hand gestures: lizard and spock. The default CNN does still has the same number of outputs: tie, player1 wins and player2 wins and it also has an increase in the learning to 0.001. A new CNN has been introduced for this problem and it is described in the following section.
 
 \subsubsection{Results}
-The loss and accuracy over the iterations of both models are plotted on figure \ref{fig:rpsls_output_loss} and figure \ref{fig:rpsls_output_acc} respectively. Notice that the scales are different from those we have seen on figre \ref{fig:rps_output}. We can clearly see by keeping the same models and increasing the complexity, the CNN model struggles more. It takes the CNN model 38000 iterations to reach an accuracy of 100\% while the DeepProbLog model takes only 3700 iterations to reach the same level of accuracy. The CNN takes up to 661 seconds until it reaches this accuracy. After excessive tuning and trying different hyperparameters for this CNN model \footnote{These tuning methods include altering the learning rate, gradually increasing or decreasing the learning rate \cite{lr-decay}, gradually increasing the batch-size \cite{increase-batch}, choosing different optimizer, L2 regularisation, altering the CNN structure (adding layers and/or nodes)}, the model was able to achieve a 100\% accuracy a little faster.  Doubling the learning rate from $0.0001$ to $0.0002$, the new CNN model was able to achieve in 23000 iterations and in 399.2 seconds. 
+The loss and accuracy over the iterations of both models are plotted on figure \ref{fig:rpsls_output_loss} and figure \ref{fig:rpsls_output_acc} respectively. Notice that the scales are different from those we have seen on figure \ref{fig:rps_output}. We can clearly see that by keeping the same models and increasing the complexity, the CNN model struggles more compared to the DeepProbLog model. It takes the CNN model 38000 iterations to reach an accuracy of 100\% while the DeepProbLog model takes only 3700 iterations to reach the same level of accuracy. The CNN takes up to 661 seconds until it reaches this accuracy while the DeepProbLog model takes 246.2 seconds.
+\\
+After excessive tuning and trying different hyperparameters for this CNN model \footnote{These tuning methods include altering the learning rate, gradually increasing or decreasing the learning rate \cite{lr-decay}, gradually increasing the batch-size \cite{increase-batch}, choosing different optimizer, L2 regularisation, altering the CNN structure (adding layers and/or nodes)}, the model was able to achieve a 100\% accuracy a little faster.  Doubling the learning rate from $0.0001$ to $0.0002$, this novel CNN model was able to achieve in 23000 iterations and in 399.2 seconds. 
 
-
-\begin{figure}
+\begin{figure}[h]
     \begin{tikzpicture}[yscale=0.9,xscale=0.9]
         \begin{axis}[xlabel=Iterations,ylabel=Loss,xscale=2]
             \addplot[thin,red] table [x=i, y=loss, col sep=comma] {results/RPSLS/RPSLS_BaseLine_loss.log};
@@ -58,10 +59,10 @@ The loss and accuracy over the iterations of both models are plotted on figure \
             \addplot[ultra thin,green]  table [x=i, y=loss, col sep=comma] {results/RPSLS/RPSLS_BaseLine_losslr0.0002lrm1.log};
         \end{axis}
     \end{tikzpicture}
-    \caption{Loss of RPS-LS networks over number of iterations}
+    \caption{Loss of RPS-LS networks over number of iterations: blue for DeepProbLog, red for CNN, green for the novel CNN with a learning rate of 0.002}
     \label{fig:rpsls_output_loss}
 \end{figure}
-\begin{figure}
+\begin{figure}[h]
     \begin{tikzpicture}[yscale=0.9,xscale=0.9]
         \begin{axis}[xlabel=Iterations,ylabel=Accuracy,xscale=2]
             \addplot[thin,red] table [x=i, y=Accuracy, col sep=comma] {results/RPSLS/RPSLS_BaseLine_accuracy.log};
@@ -69,7 +70,7 @@ The loss and accuracy over the iterations of both models are plotted on figure \
             \addplot[ultra thin,green]  table [x=i, y=Accuracy, col sep=comma] {results/RPSLS/RPSLS_BaseLine_accuracylr0.0002lrm1.log};
         \end{axis}
     \end{tikzpicture}
-    \caption{Accuracy of RPS-LS networks over number of iterations}
+    \caption{Accuracy of RPS-LS networks over number of iterations: blue for DeepProbLog, red for CNN, green for the novel CNN with a learning rate of 0.002}
     \label{fig:rpsls_output_acc}
 \end{figure}
 
