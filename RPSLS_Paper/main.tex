@@ -27,6 +27,12 @@
 \usepackage{subcaption}
 \usepackage{listings}
 \usepackage{multirow}
+
+\usepackage[
+  separate-uncertainty = true,
+  multi-part-units = repeat
+]{siunitx}
+
 \pgfplotsset{compat=newest}
 \usepgfplotslibrary{units}
 
@@ -35,21 +41,19 @@
 \title{
 		%\vspace{-1in} 	
 		\usefont{OT1}{bch}{b}{n}
-		\normalfont \normalsize \textsc{April 2021 } \\ [10pt]
+		\normalfont \normalsize \textsc{Aytug Altin} \\ [10pt]
 		\huge  DeepProbLog approach to classify Rock Paper Scissors Lizard Spock\\
 }
 
 \usepackage{authblk}
-\author[0]{Aytug Altin \\
-		Catholic University of Leuven\\
-        }
+\author[0]{Catholic University of Leuven}
 
 \begin{document}
 \maketitle
 \selectlanguage{english}
 
 \begin{abstract}
-	DeepProblog, logic programming incorporated with deep learning, is evaluated by making it learn what the result is of the game rock paper scissors and the extension rock paper scissors lizard spock. The model is evaluated and compared to a CNN that does not incorporates any aspect of logic programming. In our experiments, the DeepProbLog implementation has a better performance over the standard CNN model.
+	DeepProblog, logic programming incorporated with deep learning, is evaluated by making it learn what the result is of the game rock paper scissors and the extension rock paper scissors lizard spock. The model is evaluated and compared to a CNN that does not incorporate any aspect of logic programming. In our experiments, the DeepProbLog implementation has a better performance than the standard CNN model.
 \end{abstract}
 
 
@@ -62,6 +66,16 @@ DeepProbLog, logic programming, neural networks}
 \input{section/results.tex}
 
 \input{section/conclusion.tex}
+
+\section{Time spend}
+\begin{itemize}
+	\item 5-10 hours searching for an idea 
+	\item 25 hours reading the paper and understanding the code
+	\item 64 hours programming and documenting
+	\item 4 hours finishing the report
+	\item $\pm 10$ hours undocumented time spend re-understanding the paper and getting the code to run
+\end{itemize}
+
 
 
 

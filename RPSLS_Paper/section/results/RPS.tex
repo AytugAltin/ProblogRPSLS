@@ -1,5 +1,5 @@
 \subsection{rock paper scissors (RPS)}
-The first model is a simple rock paper scissors solver that given two images decides the winner. The possible options are: tie, player 1 wins, player 2 wins. Example images, source \cite{RPSLS-database}, can be found on figure \ref{fig:rps_input}. There are 1440 training examples and 360 examples are used to calculate the model's accuracy. 
+The first model is a simple rock paper scissors solver that given two images decides the winner. The possible options are tie, player 1 wins, player 2 wins. Example images, source \cite{RPSLS-database}, can be found in figure \ref{fig:rps_input}. There are 1440 training examples and 360 examples are used to calculate the model's accuracy. 
 
 \begin{figure}[htp]
     \centering
@@ -14,7 +14,7 @@ The first model is a simple rock paper scissors solver that given two images dec
 \begin{itemize}
     \item Cross-entropy loss between predicted and desired outcomes
     \item The network architecture: 2 convolutional layers with kernel size 5, and respectively 6 and 16 filters, both followed with a maxpool-layer of size 2 and stride 2 which are also both followed by the activation layer ReLU. These are followed by 3 linear layers 120, 84 and 3, The first 2 layers are followed by the activation layer ReLU and the last by a softmax layer. \item The learning rate has been set to 0.0001. 
-    \item Adam \cite{kingma2014adam} optimization for the neural networks, and SGD for the logic parameters is used.
+    \item Adam \cite{kingma2014adam} optimization for the neural networks, SGD for the logic parameters is used.
   \end{itemize}
   On listing \ref{lst:rps-logic} the logical model can be found for the DeepProbLog model.
 
@@ -31,11 +31,11 @@ The first model is a simple rock paper scissors solver that given two images dec
     rps(X,Y,2) :- sign(X,scissors), sign(Y,rock).
     \end{lstlisting}
 
-    The implementation and architecture for the CNN that we use to compare the DeepProbLog network is similar to the DeepProbLog model. However, outcomes of the last layer does represent the winner (3 options) instead of the hand gesture (also 3 options).
+    The implementation and architecture for the CNN that we use to compare the DeepProbLog network are similar to the DeepProbLog model. However, the outcomes of the last layer do represent the winner (3 options) instead of the hand gesture (also 3 options).
 
 
 \subsubsection{Results}
-The loss and accuracy over the iterations of both models are plotted on figure \ref{fig:rps_output}. We can clearly see that the DeepProbLog has an advantage over the CNN. The CNN reaches 100\% accuracy over 1350 iterations in 24.2 seconds while the DeepProbLog example reaches it in 350 iterations in 18.7 seconds. 
+The loss and accuracy over the iterations of both models are plotted in figure \ref{fig:rps_output}. We can clearly see that the DeepProbLog has an advantage over the CNN. The CNN reaches 100\% accuracy over 1350 iterations in 24.2 seconds while the DeepProbLog example reaches it in 350 iterations in 18.7 seconds. 
 
 
 \begin{figure}[h]
@@ -48,7 +48,7 @@ The loss and accuracy over the iterations of both models are plotted on figure \
                 
             \end{axis}
         \end{tikzpicture}
-        \caption{Loss of the both networks over number of iterations}
+        \caption{Loss of both networks over number of iterations}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.49\textwidth}
@@ -59,8 +59,8 @@ The loss and accuracy over the iterations of both models are plotted on figure \
                 
             \end{axis}
         \end{tikzpicture}
-        \caption{Accuracy of the both networks over number of iterations}
+        \caption{Accuracy of both networks over number of iterations}
     \end{subfigure}
-    \caption{Performance (loss and accuracy) of the both networks over number of iterations: blue for DeepProbLog, red for CNN}
+    \caption{Performance (loss and accuracy) of both networks over number of iterations: blue for DeepProbLog, red for CNN}
     \label{fig:rps_output}
 \end{figure}  
