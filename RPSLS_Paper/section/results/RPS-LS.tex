@@ -1,16 +1,15 @@
-\subsection{rock paper scissors lizard spock(RPS-LS)}
-
-This model is a bit more advanced. The possible winners are still the same, but there are 2 more possible inputs: spock and lizard, examples of both of these images are visible in figure \ref{fig:rpsls_input}. There are 2400 training examples and 600 examples are used to calculate the accuracy. 
-
-\begin{figure}[htp]
+\subsection{Rock Paper Scissors Lizard Spock (RPS-LS)}
+This game is a bit more advanced. The number of outcomes remain the same, but there are 2 more possible inputs: spock and lizard, examples of both of these images are visible in figure \ref{fig:rpsls_input}. There are 2400 training examples and 600 examples are used to calculate the accuracy. 
+\begin{figure}
     \centering
     \includegraphics[width=.3\textwidth]{figures/input/lizard.jpg}
     \includegraphics[width=.3\textwidth]{figures/input/spock.jpg}
-    \caption{Example of input pictures with hand gestures: lizard and spock\cite{RPSLS-database}.} %%TODO import ref of pictures source
+    \caption{Example of input pictures of the hand gestures: lizard and spock\cite{RPSLS-database}.} %%TODO import ref of pictures source
     \label{fig:rpsls_input}
 \end{figure}
 
-On listing \ref{lst:rpsls-logic} the model can be found that is used, it is similar to the RPS model.
+
+\paragraph{Implementation details:} For the DeepProbLog implementation, a similar approach has been taken to the RPS model. The learning rate has been increased to 0.001. The model now has 5 outputs instead of 3 because of the addition of 2 new hand gestures: lizard and spock. In listing \ref{lst:rpsls-logic} the ProbLog model can be found that is used, it is similar to the RPS model. The CNN model still has the same number of outputs: tie, player1 wins and player2 wins and here we also increased the learning to 0.001 for better results. Alongside this CNN model, a new CNN has been introduced for this game and it is described in the following section. 
 
 \begin{lstlisting}[label={lst:rpsls-logic},language=Prolog,frame=single,caption={Rock paper scissors lizard spock DeepProbLog model},captionpos=b]
 nn(rpsls_net,[X],Y,[paper,scissors,rock,lizard,spock]) :: sign(X,Y).
@@ -41,15 +40,11 @@ rpsls(X,Y,1) :- sign(X,spock), sign(Y,scissors).
 rpsls(X,Y,2) :- sign(X,spock), sign(Y,paper).
 rpsls(X,Y,1) :- sign(X,spock), sign(Y,rock).
 rpsls(X,Y,2) :- sign(X,spock), sign(Y,lizard).
-    \end{lstlisting}
-
-
-\paragraph{Implementation details:} For the DeepProbLog implementation, a similar approach has been taken as the RPS model. The learning rate has been increased to 0.001. The model now has 5 outputs instead of 3 because of the addition of 2 new hand gestures: lizard and spock. The default CNN does still has the same number of outputs: tie, player1 wins and player2 wins and it also has an increase in the learning to 0.001. A new CNN has been introduced for this problem and it is described in the following section.
-
+\end{lstlisting}
 \subsubsection{Results}
 The loss and accuracy over the iterations of both models are plotted in figure \ref{fig:rpsls_output_loss} and figure \ref{fig:rpsls_output_acc} respectively. Notice that the scales are different from those we have seen in figure \ref{fig:rps_output}. We can clearly see that by keeping the same models and increasing the complexity, the CNN model struggles more compared to the DeepProbLog model. It takes the CNN model 38000 iterations to reach an accuracy of 100\% while the DeepProbLog model takes only 3700 iterations to reach the same level of accuracy. The CNN takes up to 661 seconds until it reaches this accuracy while the DeepProbLog model takes 246.2 seconds.
 \\
-After excessive tuning and trying different hyperparameters for this CNN model \footnote{These tuning methods include altering the learning rate, gradually increasing or decreasing the learning rate \cite{lr-decay}, gradually increasing the batch-size \cite{increase-batch}, choosing different optimizer, L2 regularisation, altering the CNN structure (adding layers and/or nodes)}, the model was able to achieve a 100\% accuracy a little faster.  Doubling the learning rate from $0.0001$ to $0.0002$, this novel CNN model was able to achieve in 23000 iterations and in 399.2 seconds. 
+After excessive tuning and trying different hyperparameters for this CNN model \footnote{These tuning methods include altering the learning rate, gradually increasing or decreasing the learning rate \cite{lr-decay}, gradually increasing the batch-size \cite{increase-batch}, choosing different optimizer, L2 regularisation, altering the CNN structure (adding layers and/or nodes)}, the model was able to achieve a 100\% accuracy a little faster.  Setting the learning rate to $0.0002$, this novel CNN model was able to achieve in 23000 iterations and in 399.2 seconds. 
 
 \begin{figure}[h]
     \begin{tikzpicture}[yscale=0.9,xscale=0.9]
