@@ -10,10 +10,10 @@ class Net(nn.Module):
         super(Net, self).__init__()
         self.encoder = nn.Sequential(
             nn.Conv2d(1, 6, 5),
-            nn.MaxPool2d(2, 2),  # 6 24 24 -> 6 12 12
+            nn.MaxPool2d(2, 2),
             nn.ReLU(True),
-            nn.Conv2d(6, 16, 5),  # 6 12 12 -> 16 8 8
-            nn.MaxPool2d(2, 2),  # 16 8 8 -> 16 4 4
+            nn.Conv2d(6, 16, 5),
+            nn.MaxPool2d(2, 2),
             nn.ReLU(True)
         )
         self.classifier = nn.Sequential(

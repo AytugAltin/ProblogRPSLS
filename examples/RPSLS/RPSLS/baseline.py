@@ -76,7 +76,7 @@ def run(learning_rate,multpiplier=1):
 
     net = Net()
     # net = DeepNet()
-    wpath = "lr" + str(learning_rate) + "lrm" + str(multpiplier)
+    path = "lr" + str(learning_rate) + "lrm" + str(multpiplier)
 
     #net.load_state_dict(torch.load("net90"))
 
@@ -85,7 +85,7 @@ def run(learning_rate,multpiplier=1):
 
     print(learning_rate)
 
-    batchsize = 1
+    batchsize = 10
     train_dataset = RPSLS_DataSet(dataset, 'train_data.txt')
     test_dataset = RPSLS_DataSet(dataset, 'test_data.txt')
     trainloader = torch.utils.data.DataLoader(train_dataset,batch_size=batchsize,
